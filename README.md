@@ -56,14 +56,3 @@ O projeto estará disponível em [http://localhost:3000](http://localhost:3000)
 * [TypeScript](https://www.typescriptlang.org/) - Linguagem de programação
 * [Tailwind CSS](https://tailwindcss.com/) - Framework CSS
 * [React](https://reactjs.org/) - Biblioteca JavaScript
-
-## 📦 Estrutura do Projeto
-zoo-management/
-├── public/ # Arquivos estáticos
-├── src/
-│ ├── app/ # Rotas e páginas
-│ ├── components/ # Componentes React
-│ ├── data/ # Dados mockados e constantes
-│ └── types/ # Definições de tipos TypeScript
-├── .env.example # Exemplo de variáveis de ambiente
-└── ...
