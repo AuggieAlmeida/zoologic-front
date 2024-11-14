@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.sign-up-mode {
+  .sign-up-form {
+    opacity: 1;
+    z-index: 2;
+    transform: translateX(100%);
+  }
+  
+  .sign-in-form {
+    opacity: 0;
+    z-index: 1;
+    transform: translateX(100%);
+  }
+  
+  .overlay-container {
+    transform: translateX(-100%);
+    
+    .overlay {
+      transform: translateX(50%);
+    }
+  }
+}
+
+.sign-in-form {
+  opacity: 1;
+  z-index: 2;
+}
+
+.overlay-container .overlay {
+  background: linear-gradient(to right, var(--primary-green), var(--secondary-green));
+}
+
+body {
+  @apply antialiased;
+}
