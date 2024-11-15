@@ -9,6 +9,16 @@ export default function Header() {
         return 'Dashboard'
       case '/animais':
         return 'Animais'
+      case '/animais/cadastrar':
+        return 'Animais'
+      case '/animais/monitoramento':
+        return 'Animais'
+      case '/colaboradores' :
+        return 'Colaboradores'
+      case '/colaboradores/criar':
+        return 'Colaboradores'
+      case '/colaboradores/delegar':
+        return 'Colaboradores'
       case '/configuracoes':
         return 'Configurações'
       default:

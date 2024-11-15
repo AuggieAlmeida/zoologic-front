@@ -20,11 +20,11 @@ export default function DelegarColaboradores() {
   const [selectedSetor, setSelectedSetor] = useState<Setor | ''>('')
 
   const setores: Setor[] = [
-    'RH',
-    'Financeiro',
-    'Comercial',
-    'Operacional',
-    'TI'
+    'Mamíferos',  
+    'Aves',
+    'Répteis',
+    'Peixes',
+    'Anfíbios'
   ]
 
   useEffect(() => {

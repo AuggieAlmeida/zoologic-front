@@ -6,4 +6,4 @@ export interface Colaborador {
   email: string;
 }
 
-export type Setor = 'RH' | 'Financeiro' | 'Comercial' | 'Operacional' | 'TI'; 
+export type Setor = 'Mamíferos' | 'Aves' | 'Répteis' | 'Peixes' | 'Anfíbios'; 
