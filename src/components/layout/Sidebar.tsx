@@ -25,6 +25,10 @@ export default function Sidebar() {
             sizes="40px"
             className="object-contain"
             priority
+            onError={(e) => {
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
           />
         </div>
         <span className="text-xl font-bold">ZooLogic</span>
