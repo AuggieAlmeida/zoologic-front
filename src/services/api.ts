@@ -1,6 +1,9 @@
 import { Animal } from "@/types/animal";
 
-const API_BASE_URL = 'http://localhost:8000/api';
+// Set NEXT_PUBLIC_API_URL at build time to point the client at the deployed
+// API. The localhost default keeps `next dev` working with no setup.
+const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api';
 
 const defaultHeaders = {
   'Content-Type': 'application/json',
