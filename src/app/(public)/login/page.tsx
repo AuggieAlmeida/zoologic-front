@@ -27,7 +27,6 @@ export default function Login() {
             })
 
             if (response.ok) {
-                const data = await response.json()
                 window.location.href = '/dashboard'
             } else {
                 const error = await response.json()
