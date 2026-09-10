@@ -73,7 +73,7 @@ export default function DelegarColaboradores() {
 
   if (error) {
     return (
-      <div className="p-6">
+      <div>
         <div className="max-w-2xl mx-auto bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-600">{error}</p>
           <button 
@@ -91,8 +91,8 @@ export default function DelegarColaboradores() {
     <div>
       <EntityNav items={colaboradoresNavItems} basePath="/colaboradores" />
       
-      <div className="p-6">
-        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+      <div>
+        <div className="max-w-4xl mx-auto zoo-surface rounded-2xl shadow-sm p-5 md:p-6">
           <h2 className="text-xl font-semibold mb-6">Delegar Colaborador</h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">

@@ -2,23 +2,22 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { FaFacebookF, FaGoogle, FaLinkedinIn } from 'react-icons/fa'
+import { API_BASE_URL } from '@/services/api'
 
 export default function Login() {
     const [isSignUp, setIsSignUp] = useState(false)
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [signupEmail, setSignupEmail] = useState('')
+    const [signupPassword, setSignupPassword] = useState('')
+    const [message, setMessage] = useState('')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-
-        // Test credentials check
-        if (email === 'admin@gmail.com' && password === 'admin') {
-            window.location.href = '/dashboard'
-            return
-        }
+        setMessage('')
 
         try {
-            const response = await fetch('/api/login', {
+            const response = await fetch(`${API_BASE_URL}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -27,13 +26,47 @@ export default function Login() {
             })
 
             if (response.ok) {
+                const data = await response.json()
+                localStorage.setItem('zoologic_token', data.token)
                 window.location.href = '/dashboard'
             } else {
-                const error = await response.json()
-                console.error('Login failed:', error)
+                const error = await response.json().catch(() => ({}))
+                setMessage(error.error || 'E-mail ou senha inválidos.')
             }
         } catch (error) {
-            console.error('Login error:', error)
+            setMessage(error instanceof Error ? error.message : 'Não foi possível conectar ao servidor.')
+        }
+    }
+
+    const handleRegister = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setMessage('')
+
+        try {
+            const response = await fetch(`${API_BASE_URL}/register`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: signupEmail,
+                    password: signupPassword,
+                }),
+            })
+
+            const data = await response.json().catch(() => ({}))
+
+            if (!response.ok) {
+                throw new Error(data.error || 'Não foi possível criar a conta')
+            }
+
+            setEmail(signupEmail)
+            setPassword(signupPassword)
+            setMessage('Conta criada com sucesso. Faça login para continuar.')
+            setIsSignUp(false)
+        } catch (error) {
+            setMessage(error instanceof Error ? error.message : 'Não foi possível criar a conta')
         }
     }
 
@@ -43,7 +76,7 @@ export default function Login() {
             <div className="absolute top-0 w-full flex items-center justify-center gap-2 bg-primary-green p-[10px]">
                 <div className="w-12 h-12 relative">
                     <Image
-                        src="/images/logo.png"
+                        src="/logo.png"
                         alt="ZooLogic Logo"
                         fill
                         className="object-contain"
@@ -55,7 +88,7 @@ export default function Login() {
                 <div className={`relative opacity-95 w-full overflow-hidden max-w-[850px] min-h-[500px] bg-white rounded-2xl shadow-2xl transition-all duration-700 ${isSignUp ? 'sign-up-mode' : ''}`}>
                     {/* Sign Up Form */}
                     <div className="absolute top-0 left-0 w-1/2 h-full opacity-0 z-1 transition-all duration-700 sign-up-form">
-                        <form className="h-full flex flex-col items-center justify-center p-8 text-center">
+                        <form onSubmit={handleRegister} className="h-full flex flex-col items-center justify-center p-8 text-center">
                             <h1 className="text-3xl mb-4 font-lemon">Criar Conta</h1>
                             <div className="flex gap-4 mb-4">
                                 <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
@@ -69,9 +102,10 @@ export default function Login() {
                                 </a>
                             </div>
                             <span className="text-sm mb-4">ou use seu email para registro</span>
-                            <input type="email" placeholder="Email" className="w-full max-w-[280px] h-12 mb-4 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
+                            <input type="email" placeholder="Email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required className="w-full max-w-[280px] h-12 mb-4 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
                             <input type="text" placeholder="Instituição/Fundação" className="w-full max-w-[280px] h-12 mb-4 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
-                            <input type="password" placeholder="Senha" className="w-full max-w-[280px] h-12 mb-6 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
+                            <input type="password" placeholder="Senha" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} className="w-full max-w-[280px] h-12 mb-6 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
+                            {message && <p className="mb-4 text-sm text-primary-green">{message}</p>}
                             <button className="px-8 py-2 rounded-full bg-primary-green text-white hover:bg-secondary-green transition-colors font-lemon">
                                 Cadastrar
                             </button>
@@ -83,6 +117,7 @@ export default function Login() {
 
                         <form onSubmit={handleSubmit} className="h-full flex flex-col items-center justify-center p-8 text-center">
                             <h1 className="text-3xl mb-4 font-lemon">Entrar</h1>
+                            {message && <p className="mb-4 text-sm text-primary-green">{message}</p>}
                             <div className="flex gap-4 mb-4">
                                 <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
                                     <FaFacebookF />

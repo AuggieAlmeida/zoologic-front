@@ -2,17 +2,17 @@
 
 Sistema de gerenciamento para zoológico desenvolvido com Next.js 13, TypeScript e Tailwind CSS.
 
-## 🚀 Começando
+## Começando
 
 Estas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
 
-### 📋 Pré-requisitos
+### Pré-requisitos
 
 - Node.js 16.8 ou superior
 - npm ou yarn
 - Git
 
-### 🔧 Instalação
+### Instalação
 
 1. Clone o repositório
 
@@ -50,7 +50,7 @@ yarn dev
 
 O projeto estará disponível em [http://localhost:3000](http://localhost:3000)
 
-## 🛠️ Construído com
+## Construído com
 
 * [Next.js 13](https://nextjs.org/) - O framework web usado
 * [TypeScript](https://www.typescriptlang.org/) - Linguagem de programação

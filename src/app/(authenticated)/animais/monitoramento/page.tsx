@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import EntityNav from '@/components/layout/EntityNav'
 import { animaisService } from '@/services/api'
 import { Animal, StatusSaude } from '@/types/animal'
@@ -53,7 +54,7 @@ export default function MonitoramentoAnimais() {
 
   if (error) {
     return (
-      <div className="p-6">
+      <div>
         <div className="max-w-2xl mx-auto bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-600">{error}</p>
           <button 
@@ -71,7 +72,7 @@ export default function MonitoramentoAnimais() {
     <div>
       <EntityNav items={animaisNavItems} basePath="/animais" />
       
-      <div className="p-6">
+      <div>
         <div className="max-w-4xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {animais.map((animal) => (
@@ -106,9 +107,12 @@ export default function MonitoramentoAnimais() {
                 </div>
 
                 {animal.foto && (
-                  <img 
+                  <Image
                     src={animal.foto} 
                     alt={`Foto de ${animal.nome}`}
+                    width={600}
+                    height={320}
+                    unoptimized
                     className="mt-2 w-full h-32 object-cover rounded"
                   />
                 )}

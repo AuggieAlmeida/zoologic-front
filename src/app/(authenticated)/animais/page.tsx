@@ -1,5 +1,8 @@
 'use client'
+import Link from 'next/link'
+import Image from 'next/image'
 import { useEffect, useState } from 'react'
+import { FaEdit, FaTrash } from 'react-icons/fa'
 import { animaisService } from '@/services/api'
 import EntityNav from '@/components/layout/EntityNav'
 import { Animal } from '@/types/animal'
@@ -14,6 +17,7 @@ export default function GerenciarAnimais() {
   const [animais, setAnimais] = useState<Animal[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<number | null>(null)
 
   useEffect(() => {
     const fetchAnimais = async () => {
@@ -22,7 +26,9 @@ export default function GerenciarAnimais() {
         const data = await animaisService.listar()
         setAnimais(data)
       } catch (error) {
-        setError('Erro ao carregar animais. Tente novamente mais tarde.')
+        setError(error instanceof Error && error.message === 'Autenticação necessária'
+          ? 'Sua sessão expirou. Faça login novamente.'
+          : 'Erro ao carregar animais. Tente novamente mais tarde.')
         console.error('Erro ao buscar animais:', error)
       } finally {
         setLoading(false)
@@ -31,6 +37,21 @@ export default function GerenciarAnimais() {
     
     fetchAnimais()
   }, [])
+
+  const handleDelete = async (animal: Animal) => {
+    if (!window.confirm(`Excluir o animal ${animal.nome}?`)) return
+
+    try {
+      setDeletingId(animal.id_animal)
+      setError(null)
+      await animaisService.excluir(animal.id_animal)
+      setAnimais((current) => current.filter((item) => item.id_animal !== animal.id_animal))
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Não foi possível excluir o animal.')
+    } finally {
+      setDeletingId(null)
+    }
+  }
 
   if (loading) {
     return (
@@ -42,7 +63,7 @@ export default function GerenciarAnimais() {
 
   if (error) {
     return (
-      <div className="p-6">
+      <div>
         <div className="max-w-2xl mx-auto bg-red-50 border border-red-200 rounded-lg p-4">
           <p className="text-red-600">{error}</p>
           <button 
@@ -59,14 +80,23 @@ export default function GerenciarAnimais() {
   return (
     <div>
       <EntityNav items={animaisNavItems} basePath="/animais" />
-      <div className="p-6">
+      <div>
         <div className="max-w-4xl mx-auto">
+          {animais.length === 0 && (
+            <div className="zoo-surface rounded-2xl p-6 text-center shadow-sm">
+              <p className="text-zoo-muted">Nenhum animal cadastrado.</p>
+              <Link href="/animais/cadastrar" className="mt-4 inline-flex rounded-xl bg-zoo-forest px-4 py-2.5 text-sm font-semibold text-white hover:bg-zoo-forest-soft">
+                Cadastrar animal
+              </Link>
+            </div>
+          )}
+
           {animais.map((animal) => (
-            <div key={animal.id_animal} className="bg-white p-4 rounded-lg shadow mb-4">
+            <div key={animal.id_animal} className="zoo-surface mb-4 rounded-2xl p-5 shadow-sm">
               <div className="flex justify-between items-start">
                 <div>
-                  <h3 className="text-lg font-semibold">{animal.nome}</h3>
-                  <p className="text-gray-600">
+                  <h3 className="text-lg font-semibold text-zoo-ink">{animal.nome}</h3>
+                  <p className="text-zoo-muted">
                     {animal.tipo} - {animal.especie}
                   </p>
                 </div>
@@ -81,31 +111,31 @@ export default function GerenciarAnimais() {
               
               <div className="mt-4 grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600">Setor</p>
-                  <p>{animal.setor}</p>
+                  <p className="text-sm text-zoo-muted">Setor</p>
+                  <p className="text-zoo-ink">{animal.setor}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Sexo</p>
-                  <p>{animal.sexo === 'M' ? 'Macho' : 'Fêmea'}</p>
+                  <p className="text-sm text-zoo-muted">Sexo</p>
+                  <p className="text-zoo-ink">{animal.sexo === 'M' ? 'Macho' : 'Fêmea'}</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Idade</p>
-                  <p>{animal.idade} anos</p>
+                  <p className="text-sm text-zoo-muted">Idade</p>
+                  <p className="text-zoo-ink">{animal.idade} anos</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600">Peso</p>
-                  <p>{animal.peso} kg</p>
+                  <p className="text-sm text-zoo-muted">Peso</p>
+                  <p className="text-zoo-ink">{animal.peso} kg</p>
                 </div>
               </div>
 
               <div className="mt-4">
-                <span className="inline-block bg-gray-100 px-3 py-1 rounded-full text-sm mr-2">
+                <span className="inline-block rounded-full bg-zoo-sage px-3 py-1 text-sm text-zoo-ink mr-2">
                   {animal.alimentacao}
                 </span>
               </div>
 
               {animal.observacoes && (
-                <div className="mt-4 text-sm text-gray-600">
+                <div className="mt-4 text-sm text-zoo-muted">
                   <p className="font-medium">Observações:</p>
                   <p>{animal.observacoes}</p>
                 </div>
@@ -113,13 +143,36 @@ export default function GerenciarAnimais() {
 
               {animal.foto && (
                 <div className="mt-4">
-                  <img 
+                  <Image
                     src={animal.foto} 
                     alt={`Foto de ${animal.tipo}`} 
+                    width={600}
+                    height={320}
+                    unoptimized
                     className="w-full max-w-xs rounded-lg"
                   />
                 </div>
               )}
+
+              <div className="mt-5 flex justify-end gap-2 border-t border-zoo-border pt-4">
+                <Link
+                  href={`/animais/cadastrar?editar=${animal.id_animal}`}
+                  aria-label={`Editar ${animal.nome}`}
+                  className="inline-flex items-center gap-2 rounded-xl border border-zoo-border px-3 py-2 text-sm font-semibold text-zoo-forest hover:bg-zoo-mist"
+                >
+                  <FaEdit aria-hidden="true" />
+                  Editar
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => handleDelete(animal)}
+                  disabled={deletingId === animal.id_animal}
+                  className="inline-flex items-center gap-2 rounded-xl border border-red-200 px-3 py-2 text-sm font-semibold text-red-700 hover:bg-red-50 disabled:cursor-wait disabled:opacity-60"
+                >
+                  <FaTrash aria-hidden="true" />
+                  {deletingId === animal.id_animal ? 'Excluindo...' : 'Excluir'}
+                </button>
+              </div>
             </div>
           ))}
         </div>

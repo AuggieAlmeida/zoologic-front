@@ -1,9 +1,10 @@
 'use client'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EntityNav from '@/components/layout/EntityNav'
-import { animaisService } from '@/services/api'
+import { animaisService, habitatsService } from '@/services/api'
 import { useRouter } from 'next/navigation'
-import { TipoAlimentacao, StatusSaude, SetorAnimal, TipoAnimal, Habitat } from '@/types/animal'
+import { TipoAlimentacao, StatusSaude, SetorAnimal, TipoAnimal } from '@/types/animal'
+import { Habitat as HabitatCadastro } from '@/types/habitat'
 
 const animaisNavItems = [
     { name: 'Gerenciar', path: '' },
@@ -13,12 +14,19 @@ const animaisNavItems = [
 
 export default function CadastrarAnimal() {
     const router = useRouter()
+    const [editingId, setEditingId] = useState<number | null>(null)
+    const [loadingAnimal, setLoadingAnimal] = useState(false)
+    const [formError, setFormError] = useState('')
+    const [saving, setSaving] = useState(false)
+    const [habitatsCadastrados, setHabitatsCadastrados] = useState<HabitatCadastro[]>([])
+    const [habitatsLoading, setHabitatsLoading] = useState(true)
+    const [habitatsError, setHabitatsError] = useState(false)
     const [formData, setFormData] = useState({
         nome: '',
         especie: '',
         setor: '' as SetorAnimal,
         tipo: '' as TipoAnimal,
-        habitat: '' as Habitat,
+        habitat_id: '',
         idade: '',
         peso: '',
         alimentacao: '' as TipoAlimentacao,
@@ -32,33 +40,64 @@ export default function CadastrarAnimal() {
     const tiposAlimentacao: TipoAlimentacao[] = ['Carnívoro', 'Herbívoro', 'Onívoro']
     const statusSaude: StatusSaude[] = ['Saudável', 'Em Tratamento', 'Crítico']
     const tiposAnimal: TipoAnimal[] = ['Mamífero', 'Ave', 'Réptil', 'Anfíbio', 'Peixe']
-    const habitats: Habitat[] = [
-        'Floresta',
-        'Savanas',
-        'Desertos quentes',
-        'Tundra ártica',
-        'Montanhas',
-        'Pradarias',
-        'Rios e córregos',
-        'Lagos e lagoas',
-        'Pântanos',
-        'Recifes de coral',
-        'Manguezais',
-        'Costas rochosas e praias',
-        'Cavernas'
-    ]
+    useEffect(() => {
+        habitatsService.listar()
+            .then(setHabitatsCadastrados)
+            .catch((error) => {
+                console.error('Erro ao carregar habitats:', error)
+                setHabitatsError(true)
+            })
+            .finally(() => setHabitatsLoading(false))
+    }, [])
+
+    useEffect(() => {
+        const idParam = new URLSearchParams(window.location.search).get('editar')
+        const id = idParam ? Number(idParam) : NaN
+        if (!Number.isInteger(id) || id <= 0) return
+
+        setEditingId(id)
+        setLoadingAnimal(true)
+        animaisService.buscar(id)
+            .then((animal) => setFormData({
+                nome: animal.nome,
+                especie: animal.especie,
+                setor: animal.setor,
+                tipo: animal.tipo,
+                habitat_id: String(animal.habitat_id),
+                idade: String(animal.idade),
+                peso: String(animal.peso),
+                alimentacao: animal.alimentacao,
+                status: animal.status,
+                sexo: animal.sexo,
+                observacoes: animal.observacoes ?? '',
+                foto: animal.foto ?? '',
+            }))
+            .catch((error) => setFormError(error instanceof Error ? error.message : 'Não foi possível carregar o animal.'))
+            .finally(() => setLoadingAnimal(false))
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
+        setFormError('')
+        setSaving(true)
         try {
-            await animaisService.criar({
+            const dados = {
                 ...formData,
+                habitat_id: Number(formData.habitat_id),
                 idade: Number(formData.idade),
                 peso: Number(formData.peso),
-            })
+            }
+            if (editingId) {
+                await animaisService.atualizar(editingId, dados)
+            } else {
+                await animaisService.criar(dados)
+            }
             router.push('/animais')
         } catch (error) {
             console.error('Erro ao cadastrar animal:', error)
+            setFormError(error instanceof Error ? error.message : 'Não foi possível salvar o animal.')
+        } finally {
+            setSaving(false)
         }
     }
 
@@ -73,9 +112,16 @@ export default function CadastrarAnimal() {
         <div>
             <EntityNav items={animaisNavItems} basePath="/animais" />
 
-            <div className="p-6">
-                <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
-                    <h2 className="text-xl font-semibold mb-6">Cadastrar Animal</h2>
+            <div>
+                <div className="max-w-4xl mx-auto zoo-surface rounded-2xl shadow-sm p-5 md:p-6">
+                    <h2 className="text-xl font-semibold mb-2 text-zoo-forest">{editingId ? 'Editar animal' : 'Cadastrar animal'}</h2>
+                    <p className="mb-6 text-sm text-zoo-muted">{editingId ? 'Atualize os dados do animal cadastrado.' : 'Adicione um novo animal ao plantel.'}</p>
+
+                    {formError && <p role="alert" className="mb-5 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{formError}</p>}
+
+                    {loadingAnimal ? (
+                        <p className="py-8 text-center text-sm text-zoo-muted">Carregando dados do animal...</p>
+                    ) : (
 
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -149,17 +195,26 @@ export default function CadastrarAnimal() {
                                     Habitat
                                 </label>
                                 <select
-                                    name="habitat"
-                                    value={formData.habitat}
+                                    name="habitat_id"
+                                    value={formData.habitat_id}
                                     onChange={handleChange}
                                     className="w-full border border-gray-300 rounded-md p-2"
                                     required
+                                    disabled={habitatsLoading || habitatsError}
                                 >
-                                    <option value="">Selecione o habitat</option>
-                                    {habitats.map((habitat) => (
-                                        <option key={habitat} value={habitat}>{habitat}</option>
+                                    <option value="">
+                                        {habitatsLoading ? 'Carregando habitats...' : 'Selecione o habitat'}
+                                    </option>
+                                    {habitatsCadastrados.map((habitat) => (
+                                        <option key={habitat.id} value={habitat.id}>{habitat.nome}</option>
                                     ))}
                                 </select>
+                                {habitatsError && (
+                                    <p className="mt-1 text-sm text-red-600">Não foi possível carregar os habitats.</p>
+                                )}
+                                {!habitatsLoading && !habitatsError && habitatsCadastrados.length === 0 && (
+                                    <p className="mt-1 text-sm text-amber-700">Cadastre um habitat antes de cadastrar um animal.</p>
+                                )}
                             </div>
 
                             <div>
@@ -277,12 +332,14 @@ export default function CadastrarAnimal() {
                         <div className="mt-6">
                             <button
                                 type="submit"
+                                disabled={saving || habitatsLoading || habitatsError}
                                 className="w-full bg-primary-green text-white rounded-md p-2 hover:bg-primary-green-dark"
                             >
-                                Cadastrar
+                                {saving ? 'Salvando...' : editingId ? 'Salvar alterações' : 'Cadastrar'}
                             </button>
                         </div>
                     </form>
+                    )}
                 </div>
             </div>
         </div>

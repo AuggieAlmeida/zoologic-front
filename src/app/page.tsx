@@ -11,7 +11,7 @@ export default function Main() {
             <div className="absolute top-0 w-full flex items-center justify-center gap-2 bg-primary-green p-[10px]">
                 <div className="w-12 h-12 relative">
                     <Image
-                        src="/images/logo.png"
+                        src="/logo.png"
                         alt="ZooLogic Logo"
                         fill
                         className="object-contain"

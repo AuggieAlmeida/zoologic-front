@@ -1,10 +1,12 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package*.json ./
+# The lockfile has to travel with the manifest: without it yarn resolves
+# fresh versions and pulls a Next release the pinned Node cannot run.
+COPY package.json yarn.lock ./
 
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 COPY . .
 

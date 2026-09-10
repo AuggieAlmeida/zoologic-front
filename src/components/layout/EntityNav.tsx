@@ -18,16 +18,16 @@ export default function EntityNav({ items, basePath }: EntityNavProps) {
   const isActive = (path: string) => pathname === path
 
   return (
-    <nav className="w-full bg-white shadow-sm" style={{ margin: '-1.5rem', marginBottom: '3rem', width: 'calc(100% + 3rem)' }}>
-      <div className="flex">
+    <nav className="w-full bg-zoo-cream border-b border-zoo-border" style={{ margin: '-1.5rem', marginBottom: '2rem', width: 'calc(100% + 3rem)' }}>
+      <div className="flex px-4 md:px-8">
         {items.map((item) => (
           <Link
             key={item.path}
             href={`${basePath}${item.path}`}
-            className={`flex-1 text-center py-3 transition-colors rounded-b-lg
+            className={`flex-1 text-center py-4 text-sm font-semibold transition-colors border-b-2
               ${isActive(`${basePath}${item.path}`) 
-                ? 'bg-primary-green text-white' 
-                : 'bg-white text-gray-700 hover:bg-gray-100'
+                ? 'border-zoo-gold text-zoo-forest' 
+                : 'border-transparent text-gray-500 hover:text-zoo-forest hover:border-zoo-sage'
               }`}
           >
             {item.name}

@@ -6,9 +6,9 @@ interface StatusCardProps {
 
 export default function StatusCard({ title, count, color }: StatusCardProps) {
   return (
-    <div className={`${color} rounded-lg shadow p-6 text-white hover:shadow-lg transition-shadow duration-300`}>
-      <h3 className="text-lg font-semibold mb-2 font-montserrat">{title}</h3>
-      <p className="text-3xl font-bold font-montserrat">{count}</p>
+    <div className={`${color} rounded-2xl shadow-sm p-6 text-white hover:-translate-y-1 hover:shadow-lg transition-all duration-300`}>
+      <h3 className="text-xs uppercase tracking-[0.14em] font-semibold mb-3 font-montserrat text-white/75">{title}</h3>
+      <p className="text-4xl font-bold font-montserrat">{count}</p>
     </div>
   )
 } 

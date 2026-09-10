@@ -14,7 +14,7 @@ export default function SidebarItem({ icon, text, href }: SidebarItemProps) {
 
   return (
     <Link href={href}>
-      <div className={`flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-secondary-green ${isActive ? 'bg-secondary-green' : ''}`}>
+      <div className={`flex items-center gap-3 px-4 py-3 rounded-xl cursor-pointer text-sm font-medium hover:bg-white/10 ${isActive ? 'bg-white/15 text-white shadow-inner' : 'text-white/70'}`}>
         {icon}
         <span>{text}</span>
       </div>

@@ -30,7 +30,7 @@ export default function GerenciarColaboradores() {
   return (
     <div>
       <EntityNav items={colaboradoresNavItems} basePath="/colaboradores" />
-      <div className="p-6">
+      <div>
         <div className="max-w-4xl mx-auto">
           {/* Implementar tabela ou lista de colaboradores */}
           {colaboradores.map((colab) => (

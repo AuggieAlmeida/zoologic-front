@@ -1,18 +1,5 @@
 import './globals.css'
 import { Metadata } from "next";
-import { Lemon, Montserrat } from 'next/font/google'
-
-const lemon = Lemon({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-lemon',
-})
-
-const montserrat = Montserrat({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-montserrat',
-})
 
 export const metadata: Metadata = {
   title: "ZooLogic - Gestão de Zoológicos",
@@ -33,8 +20,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${lemon.variable} ${montserrat.variable} font-sans`}>
+    <html lang="pt-BR">
+      <body className="font-sans">
         {children}
       </body>
     </html>

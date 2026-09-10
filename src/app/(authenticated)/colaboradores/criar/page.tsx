@@ -45,8 +45,8 @@ export default function CriarColaborador() {
     <div>
       <EntityNav items={colaboradoresNavItems} basePath="/colaboradores" />
       
-      <div className="p-6">
-        <div className="max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+      <div>
+        <div className="max-w-4xl mx-auto zoo-surface rounded-2xl shadow-sm p-5 md:p-6">
           <h2 className="text-xl font-semibold mb-6">Criar Colaborador</h2>
           
           <form onSubmit={handleSubmit} className="space-y-6">
