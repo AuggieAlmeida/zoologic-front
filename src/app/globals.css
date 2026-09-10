@@ -81,3 +81,24 @@ html.dark textarea {
 
 html.dark input::placeholder,
 html.dark textarea::placeholder { color: #8fa49a; }
+
+/* Dark mode text color overrides */
+html.dark .text-gray-700,
+html.dark .text-gray-600,
+html.dark .text-gray-500 { color: var(--zoo-ink); }
+
+html.dark .text-red-700,
+html.dark .text-red-600 { color: #fca5a5; }
+
+html.dark .text-green-800,
+html.dark .text-green-700,
+html.dark .text-green-600 { color: #86efac; }
+
+html.dark .bg-red-50,
+html.dark .bg-red-100 { background-color: #7f1d1d; }
+
+html.dark .bg-green-100 { background-color: #064e3b; }
+
+html.dark .border-red-200 { border-color: #b91c1c; }
+
+html.dark .border-gray-300 { border-color: var(--zoo-border); }
