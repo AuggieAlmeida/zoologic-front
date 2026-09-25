@@ -1,58 +1,81 @@
-# Zoo Management System
+# ZooLogic
 
-Sistema de gerenciamento para zoológico desenvolvido com Next.js 13, TypeScript e Tailwind CSS.
+Front end for ZooLogic, a zoo management panel. Staff use it to manage animals and their health status, habitats, veterinarians and team assignments. Every screen reads and writes live data through the [ZooLogic API](https://github.com/AuggieAlmeida/zoologic-api).
 
-## Começando
+- **Live demo:** https://zoologic-front.vercel.app. Create an account on the sign-up side of the login screen.
+- **API:** https://zoologic-api.onrender.com/api/health
 
-Estas instruções permitirão que você obtenha uma cópia do projeto em operação na sua máquina local para fins de desenvolvimento e teste.
+> The API sleeps on Render's free plan. If the first login takes about a minute, the API is waking up. Requests after that are fast.
 
-### Pré-requisitos
+## Features
 
-- Node.js 16.8 ou superior
-- npm ou yarn
-- Git
+| Area | What it does |
+|---|---|
+| Login and sign-up | JWT session stored in the browser. Expired tokens are detected client-side and the user is sent back to login. |
+| Dashboard | Status cards and charts built from real animals, habitats and veterinarians. |
+| Animals | List, register, edit and delete, plus a monitoring view that persists each animal's health status. |
+| Habitats | Full CRUD. |
+| Veterinarians | Full CRUD, with unique CRMV and e-mail enforced by the API. |
+| Staff | List and register staff members, and delegate them to a sector. |
+| Reports | Operational overview with filters and CSV export of the animal list. |
+| Statistics | Herd health plus distribution charts by animal type, sector and habitat. |
+| Settings | Light, dark or system theme, and sign-out. |
 
-### Instalação
+Every page under `(authenticated)` checks for a valid token before rendering and redirects to `/login?redirect=<page>` when there is none. Sign-out is in the sidebar and in Settings.
 
-1. Clone o repositório
+## Stack
 
-```bash
-git clone https://github.com/seu-usuario/zoo-management.git
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 15 (App Router), React 19 |
+| Language | TypeScript |
+| Styling | Tailwind CSS with custom design tokens |
+| Charts | Chart.js via `react-chartjs-2` |
+| Icons | `react-icons` |
+| Deploy | Vercel, with a build check on GitHub Actions |
+
+## Project layout
+
+```
+src/app/(public)/login          login and sign-up
+src/app/(authenticated)/        protected pages; layout.tsx holds the auth guard
+src/components/layout/          Sidebar, Header, entity navigation
+src/components/dashboard/       status and chart cards
+src/components/charts/          chart wrappers
+src/services/api.ts             API client: base URL, token handling, one service per resource
+src/services/theme.ts           theme preference
+src/types/                      shared types per entity
 ```
 
-2. Entre no diretório do projeto
+## Running locally
+
+You need Node.js 20 and Yarn. The API must be running too: see its [README](https://github.com/AuggieAlmeida/zoologic-api#running-locally).
 
 ```bash
-cd zoo-management
-```
-
-3. Instale as dependências
-
-```bash
-npm install
-# or
-yarn install
-```
-
-4. Crie um arquivo .env.local na raiz do projeto e configure as variáveis de ambiente necessárias
-
-env
-Exemplo de variáveis necessárias
-NEXT_PUBLIC_API_URL=http://localhost:3000
-
-5. Inicie o servidor de desenvolvimento
-
-```bash
-npm run dev
-# or
+yarn install --frozen-lockfile
+cp .env.example .env.local
 yarn dev
 ```
 
-O projeto estará disponível em [http://localhost:3000](http://localhost:3000)
+The app is served at http://localhost:3000. Start from `/login`.
 
-## Construído com
+Use Yarn. `yarn.lock` is the lockfile Vercel builds from, and switching package managers can resolve different versions.
 
-* [Next.js 13](https://nextjs.org/) - O framework web usado
-* [TypeScript](https://www.typescriptlang.org/) - Linguagem de programação
-* [Tailwind CSS](https://tailwindcss.com/) - Framework CSS
-* [React](https://reactjs.org/) - Biblioteca JavaScript
+## Configuration
+
+| Variable | Default | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api` | Base URL of the API, including the `/api` prefix. |
+
+The value is inlined into the bundle at build time. Changing it on Vercel takes a new build, not just an edit to the variable.
+
+The API only accepts requests from origins in its `CORS_ALLOWED_ORIGINS`. A new front-end URL must be added there before login will work from it.
+
+## Scripts
+
+| Command | Purpose |
+|---|---|
+| `yarn dev` | Development server with hot reload |
+| `yarn build` | Production build |
+| `yarn start` | Serve the production build |
+| `yarn lint` | ESLint with the Next.js core-web-vitals and TypeScript rules |
