@@ -17,8 +17,9 @@ export default function EntityNav({ items, basePath }: EntityNavProps) {
 
   const isActive = (path: string) => pathname === path
 
+  // Bleeds to the edges of <main> by cancelling its padding, which is smaller below md.
   return (
-    <nav className="w-full bg-zoo-cream border-b border-zoo-border" style={{ margin: '-1.5rem', marginBottom: '2rem', width: 'calc(100% + 3rem)' }}>
+    <nav className="bg-zoo-cream border-b border-zoo-border -mx-4 -mt-5 mb-8 w-[calc(100%+2rem)] md:-mx-6 md:-mt-6 md:w-[calc(100%+3rem)]">
       <div className="flex px-4 md:px-8">
         {items.map((item) => (
           <Link

@@ -1,5 +1,5 @@
 'use client'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
@@ -13,6 +13,7 @@ export default function AuthenticatedLayout({
 }) {
   const router = useRouter()
   const pathname = usePathname()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   useEffect(() => {
     const syncTheme = () => applyTheme(getThemePreference())
@@ -28,15 +29,21 @@ export default function AuthenticatedLayout({
     if (!getAuthToken()) router.replace(`/login?redirect=${encodeURIComponent(pathname)}`)
   }, [pathname, router])
 
+  // Navigating from the mobile drawer should reveal the page, not leave the menu over it.
+  useEffect(() => { setMenuOpen(false) }, [pathname])
+
   return (
     <div className="flex h-screen bg-zoo-mist">
-      <Sidebar />
-      <div className="flex-1 overflow-auto">
-        <Header />
+      <Sidebar open={menuOpen} />
+      {menuOpen && (
+        <div className="fixed inset-0 z-30 bg-black/40 md:hidden" onClick={() => setMenuOpen(false)} aria-hidden="true" />
+      )}
+      <div className="min-w-0 flex-1 overflow-auto">
+        <Header menuOpen={menuOpen} onMenuToggle={() => setMenuOpen(open => !open)} />
         <main className="px-4 py-5 md:px-6 md:py-6">
           {children}
         </main>
       </div>
     </div>
   )
-} 
+}

@@ -1,10 +1,15 @@
 'use client'
 import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { FaMoon, FaSun } from 'react-icons/fa'
+import { FaBars, FaMoon, FaSun } from 'react-icons/fa'
 import { applyTheme, getThemePreference, saveThemePreference } from '@/services/theme'
 
-export default function Header() {
+interface HeaderProps {
+  menuOpen: boolean
+  onMenuToggle: () => void
+}
+
+export default function Header({ menuOpen, onMenuToggle }: HeaderProps) {
   const pathname = usePathname()
   const [dark, setDark] = useState(false)
 
@@ -49,9 +54,12 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-zoo-cream border-b border-zoo-sage/70 px-6 py-5">
-      <div className="flex items-center justify-between">
-        <div>
+    <header className="bg-zoo-cream border-b border-zoo-sage/70 px-4 py-4 md:px-6 md:py-5">
+      <div className="flex items-center justify-between gap-3">
+        <button type="button" onClick={onMenuToggle} aria-label={menuOpen ? 'Fechar menu' : 'Abrir menu'} aria-expanded={menuOpen} aria-controls="app-sidebar" className="rounded-xl border border-zoo-border p-2.5 text-zoo-forest transition hover:bg-zoo-mist md:hidden">
+          <FaBars />
+        </button>
+        <div className="mr-auto">
           <p className="text-xs uppercase tracking-[0.18em] text-zoo-forest/50">Painel de gestão</p>
           <h1 className="text-2xl font-semibold font-lemon text-zoo-forest">{getTitleFromPath()}</h1>
         </div>

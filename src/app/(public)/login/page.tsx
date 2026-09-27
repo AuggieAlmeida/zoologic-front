@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import Image from 'next/image'
-import { FaFacebookF, FaGoogle, FaLinkedinIn } from 'react-icons/fa'
 import { API_BASE_URL } from '@/services/api'
 
 export default function Login() {
@@ -90,20 +89,8 @@ export default function Login() {
                     <div className="absolute top-0 left-0 w-1/2 h-full opacity-0 z-1 transition-all duration-700 sign-up-form">
                         <form onSubmit={handleRegister} className="h-full flex flex-col items-center justify-center p-8 text-center">
                             <h1 className="text-3xl mb-4 font-lemon">Criar Conta</h1>
-                            <div className="flex gap-4 mb-4">
-                                <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
-                                    <FaFacebookF />
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
-                                    <FaGoogle />
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
-                                    <FaLinkedinIn />
-                                </a>
-                            </div>
-                            <span className="text-sm mb-4">ou use seu email para registro</span>
+                            <span className="text-sm mb-4">Use seu e-mail para criar o acesso</span>
                             <input type="email" placeholder="Email" value={signupEmail} onChange={(e) => setSignupEmail(e.target.value)} required className="w-full max-w-[280px] h-12 mb-4 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
-                            <input type="text" placeholder="Instituição/Fundação" className="w-full max-w-[280px] h-12 mb-4 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
                             <input type="password" placeholder="Senha" value={signupPassword} onChange={(e) => setSignupPassword(e.target.value)} required minLength={6} className="w-full max-w-[280px] h-12 mb-6 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green" />
                             {message && <p className="mb-4 text-sm text-primary-green">{message}</p>}
                             <button className="px-8 py-2 rounded-full bg-primary-green text-white hover:bg-secondary-green transition-colors font-lemon">
@@ -118,18 +105,7 @@ export default function Login() {
                         <form onSubmit={handleSubmit} className="h-full flex flex-col items-center justify-center p-8 text-center">
                             <h1 className="text-3xl mb-4 font-lemon">Entrar</h1>
                             {message && <p className="mb-4 text-sm text-primary-green">{message}</p>}
-                            <div className="flex gap-4 mb-4">
-                                <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
-                                    <FaFacebookF />
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
-                                    <FaGoogle />
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full border-2 flex items-center justify-center text-primary-green hover:bg-primary-green hover:text-white transition-colors">
-                                    <FaLinkedinIn />
-                                </a>
-                            </div>
-                            <span className="text-sm mb-4">ou use sua conta</span>
+                            <span className="text-sm mb-4">Acesse com seu e-mail e senha</span>
                             <input
                                 type="email"
                                 placeholder="Email"
@@ -142,10 +118,9 @@ export default function Login() {
                                 placeholder="Senha"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full max-w-[280px] h-12 mb-4 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green"
+                                className="w-full max-w-[280px] h-12 mb-6 px-4 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-green"
                             />
-                            <a href="#" className="text-sm mb-6 hover:text-primary-green">Esqueceu sua senha?</a>
-                            <button className="px-8 py-2 rounded-full bg-primary-green text-white hover:bg-secondary-green transition-colors font-lemon">
+                                                        <button className="px-8 py-2 rounded-full bg-primary-green text-white hover:bg-secondary-green transition-colors font-lemon">
                                 Entrar
                             </button>
                         </form>

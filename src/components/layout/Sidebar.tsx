@@ -5,7 +5,12 @@ import { FaHome, FaPaw, FaUserMd, FaWarehouse, FaUsers, FaClipboardList, FaChart
 import SidebarItem from './SidebarItem'
 import { clearAuthSession } from '@/services/api'
 
-export default function Sidebar() {
+interface SidebarProps {
+  // Only meaningful below the md breakpoint, where the sidebar is a drawer.
+  open: boolean
+}
+
+export default function Sidebar({ open }: SidebarProps) {
   const router = useRouter()
   const menuItems = [
     { icon: <FaHome size={20} />, text: "Dashboard", href: "/dashboard" },
@@ -19,7 +24,7 @@ export default function Sidebar() {
   ]
 
   return (
-    <div className="w-64 bg-zoo-forest text-white h-screen flex flex-col shadow-xl">
+    <div id="app-sidebar" className={`fixed inset-y-0 left-0 z-40 w-64 shrink-0 bg-zoo-forest text-white h-screen flex flex-col shadow-xl transition-transform duration-200 md:static md:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
       <div className="px-5 py-6 flex items-center gap-3 border-b border-white/10">
         <div className="relative w-11 h-11 rounded-xl bg-white/10 p-1">
           <Image

@@ -16,12 +16,12 @@ Front end for ZooLogic, a zoo management panel. Staff use it to manage animals a
 | Animals | List, register, edit and delete, plus a monitoring view that persists each animal's health status. |
 | Habitats | Full CRUD. |
 | Veterinarians | Full CRUD, with unique CRMV and e-mail enforced by the API. |
-| Staff | List and register staff members, and delegate them to a sector. |
+| Staff | Full CRUD, plus delegating each member to a sector. |
 | Reports | Operational overview with filters and CSV export of the animal list. |
 | Statistics | Herd health plus distribution charts by animal type, sector and habitat. |
 | Settings | Light, dark or system theme, and sign-out. |
 
-Every page under `(authenticated)` checks for a valid token before rendering and redirects to `/login?redirect=<page>` when there is none. Sign-out is in the sidebar and in Settings.
+Every page under `(authenticated)` checks for a valid token before rendering and redirects to `/login?redirect=<page>` when there is none. Sign-out is in the sidebar and in Settings. Below the `md` breakpoint the sidebar becomes a drawer opened from the header.
 
 ## Stack
 

@@ -11,7 +11,7 @@
   --zoo-mist: #f4f7f3;
   --zoo-cream: #fffdf8;
   --zoo-ink: #20312d;
-  --zoo-muted: #6b7d76;
+  --zoo-muted: #5a6b65;
   --zoo-gold: #d49a55;
   --zoo-border: #dce6df;
 }
@@ -102,3 +102,29 @@ html.dark .bg-green-100 { background-color: #064e3b; }
 html.dark .border-red-200 { border-color: #b91c1c; }
 
 html.dark .border-gray-300 { border-color: var(--zoo-border); }
+
+/* --zoo-forest doubles as a background (sidebar, primary buttons) and as the
+   heading color, so it cannot simply flip in dark mode: the text use gets its
+   own light shade instead. */
+html.dark .text-zoo-forest,
+html.dark .hover\:text-zoo-forest:hover { color: #cfe5d9; }
+
+/* Legacy cards inside the panel still use bg-white. Form fields keep their
+   own dark background from the rule above. */
+html.dark main .bg-white:not(input):not(select):not(textarea) {
+  background-color: var(--zoo-cream);
+  color: var(--zoo-ink);
+}
+
+html.dark .text-red-800,
+html.dark .hover\:text-red-800:hover { color: #fecaca; }
+
+html.dark .hover\:bg-red-50:hover { background-color: #7f1d1d; }
+
+html.dark .bg-emerald-50 { background-color: #064e3b; }
+html.dark .text-emerald-700 { color: #6ee7b7; }
+html.dark .border-emerald-200 { border-color: #047857; }
+
+html.dark .bg-yellow-100 { background-color: #713f12; }
+html.dark .text-yellow-800 { color: #fde68a; }
+html.dark .text-amber-700 { color: #fcd34d; }

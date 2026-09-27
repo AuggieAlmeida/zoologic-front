@@ -1,6 +1,7 @@
 import { Animal, AnimalInput } from "@/types/animal";
 import { VeterinarioInput } from "@/types/veterinario";
 import { HabitatInput } from "@/types/habitat";
+import { ColaboradorUpdate } from "@/types/colaborador";
 
 // Set NEXT_PUBLIC_API_URL at build time to point the client at the deployed
 // API. The localhost default keeps `next dev` working with no setup.
@@ -106,6 +107,25 @@ export const colaboradoresService = {
         ? error
         : new Error('Não foi possível conectar ao servidor');
     }
+  },
+
+  async atualizar(id: number, dados: ColaboradorUpdate) {
+    const response = await fetch(`${API_BASE_URL}/colaboradores/${id}`, {
+      method: 'PUT',
+      ...defaultOptions,
+      headers: { ...defaultHeaders, Authorization: `Bearer ${getAuthToken() ?? ''}` },
+      body: JSON.stringify(dados),
+    });
+    return handleResponse(response);
+  },
+
+  async excluir(id: number) {
+    const response = await fetch(`${API_BASE_URL}/colaboradores/${id}`, {
+      method: 'DELETE',
+      ...defaultOptions,
+      headers: { ...defaultHeaders, Authorization: `Bearer ${getAuthToken() ?? ''}` },
+    });
+    return handleResponse(response);
   },
 };
 

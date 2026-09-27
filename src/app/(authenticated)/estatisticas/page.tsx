@@ -75,7 +75,7 @@ export default function EstatisticasPage() {
         ))}
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <ChartCard title="Saúde do plantel" bgColor="bg-zoo-forest">
           <PieChart data={{ labels: ['Saudável', 'Em Tratamento', 'Crítico'], datasets: [{ data: [health.healthy, health.treatment, health.critical], backgroundColor: ['#80A889', '#D6A84F', '#C47B5B'], borderWidth: 1, borderColor: '#FFFFFF' }] }} />
         </ChartCard>
