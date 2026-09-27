@@ -42,7 +42,7 @@ src/app/(authenticated)/        protected pages; layout.tsx holds the auth guard
 src/components/layout/          Sidebar, Header, entity navigation
 src/components/dashboard/       status and chart cards
 src/components/charts/          chart wrappers
-src/services/api.ts             API client: base URL, token handling, one service per resource
+src/services/api.ts             API client: token handling, response cache, one service per resource
 src/services/theme.ts           theme preference
 src/types/                      shared types per entity
 ```
@@ -65,11 +65,22 @@ Use Yarn. `yarn.lock` is the lockfile Vercel builds from, and switching package 
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api` | Base URL of the API, including the `/api` prefix. |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000/api` | Where the app proxies `/api/*`, including the `/api` prefix. |
 
-The value is inlined into the bundle at build time. Changing it on Vercel takes a new build, not just an edit to the variable.
+The browser never calls the API directly. It requests `/api/...` on its own origin, and a rewrite in `next.config.js` forwards the call to `NEXT_PUBLIC_API_URL`. That removes the CORS preflight in front of each new URL and lets any deployment URL, previews included, work without being added to the API's `CORS_ALLOWED_ORIGINS`. The rewrite is fixed at build time, so changing the variable on Vercel takes a new build. When the front end runs in Docker, point it at an address the container can reach, such as the API's service name, not `localhost`.
 
-The API only accepts requests from origins in its `CORS_ALLOWED_ORIGINS`. A new front-end URL must be added there before login will work from it.
+## Performance
+
+Measured with the API limited to 0.1 vCPU (Render's free instance) behind a proxy that adds the 125 ms round trip between São Paulo and the API's region:
+
+| | Before | After |
+|---|---|---|
+| Dashboard first load, time to data | 1,245 ms | 707 ms |
+| Each API call on first load | ~900 ms | 166–289 ms |
+| Navigating to a screen already visited | 159–210 ms | no request |
+| Requests for a full tour of the panel, twice | 32 (4 preflights) | 5 |
+
+Lists are cached in memory for 60 seconds and shared between screens, with concurrent requests for the same URL merged into one. Opening the panel warms the four lists in the background. Any write clears the cache, since one change can move numbers on several screens.
 
 ## Scripts
 

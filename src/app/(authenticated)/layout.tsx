@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
-import { getAuthToken } from '@/services/api'
+import { getAuthToken, prefetchLists } from '@/services/api'
 import { applyTheme, getThemePreference } from '@/services/theme'
 
 export default function AuthenticatedLayout({
@@ -28,6 +28,10 @@ export default function AuthenticatedLayout({
   useEffect(() => {
     if (!getAuthToken()) router.replace(`/login?redirect=${encodeURIComponent(pathname)}`)
   }, [pathname, router])
+
+  // Page effects run before this one, so the lists the current screen asked
+  // for are already in flight and get shared; the rest load in the background.
+  useEffect(() => { if (getAuthToken()) prefetchLists() }, [])
 
   // Navigating from the mobile drawer should reveal the page, not leave the menu over it.
   useEffect(() => { setMenuOpen(false) }, [pathname])
