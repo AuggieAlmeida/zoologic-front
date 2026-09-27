@@ -84,9 +84,9 @@ export default function Login() {
                 <span className="text-2xl font-semibold text-white font-lemon">ZooLogic</span>
             </div>
 
-                <div className={`relative opacity-95 w-full overflow-hidden max-w-[850px] min-h-[500px] bg-white rounded-2xl shadow-2xl transition-all duration-700 ${isSignUp ? 'sign-up-mode' : ''}`}>
+                <div className={`relative opacity-95 w-full overflow-hidden max-w-[850px] min-h-[500px] bg-white rounded-2xl shadow-2xl transition-[opacity,transform,z-index] duration-700 ${isSignUp ? 'sign-up-mode' : ''}`}>
                     {/* Sign Up Form */}
-                    <div className="absolute top-0 left-0 w-1/2 h-full opacity-0 z-1 transition-all duration-700 sign-up-form">
+                    <div className="absolute top-0 left-0 w-1/2 h-full opacity-0 z-1 transition-[opacity,transform,z-index] duration-700 sign-up-form">
                         <form onSubmit={handleRegister} className="h-full flex flex-col items-center justify-center p-8 text-center">
                             <h1 className="text-3xl mb-4 font-lemon">Criar Conta</h1>
                             <span className="text-sm mb-4">Use seu e-mail para criar o acesso</span>
@@ -100,7 +100,7 @@ export default function Login() {
                     </div>
 
                     {/* Sign In Form */}
-                    <div className="absolute top-0 left-0 w-1/2 h-full transition-all duration-700 z-2 sign-in-form">
+                    <div className="absolute top-0 left-0 w-1/2 h-full transition-[opacity,transform,z-index] duration-700 z-2 sign-in-form">
 
                         <form onSubmit={handleSubmit} className="h-full flex flex-col items-center justify-center p-8 text-center">
                             <h1 className="text-3xl mb-4 font-lemon">Entrar</h1>
