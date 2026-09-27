@@ -11,9 +11,6 @@ module.exports = (phase) => ({
   distDir: phase === PHASE_DEVELOPMENT_SERVER
     ? (process.env.NEXT_DIST_DIR || '.next-dev')
     : '.next',
-  images: {
-    domains: ['localhost'],
-  },
   async rewrites() {
     return [{ source: '/api/:path*', destination: `${API_URL}/:path*` }]
   },

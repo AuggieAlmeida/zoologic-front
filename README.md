@@ -90,3 +90,6 @@ Lists are cached in memory for 60 seconds and shared between screens, with concu
 | `yarn build` | Production build |
 | `yarn start` | Serve the production build |
 | `yarn lint` | ESLint with the Next.js core-web-vitals and TypeScript rules |
+| `yarn type-check` | TypeScript without emitting files |
+
+The GitHub Actions workflow runs install, lint, type check and build with Yarn and the committed lockfile, the same way Vercel builds.

@@ -2,12 +2,13 @@ name: Build & Test
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 env:
   NODE_VERSION: '20'
+  NEXT_TELEMETRY_DISABLED: '1'
 
 jobs:
   build:
@@ -19,18 +20,19 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'yarn'
 
+      # Same package manager and lockfile Vercel builds from. npm resolves
+      # different versions, so a green npm build proved nothing about deploy.
       - name: Install dependencies
-        run: npm install
+        run: yarn install --frozen-lockfile
 
       - name: Lint
-        run: npm run lint --if-present
-
-      - name: Build
-        run: npm run build
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api' }}
+        run: yarn lint
 
       - name: Type check
-        run: npm run type-check --if-present
+        run: yarn type-check
+
+      # The API URL only feeds the /api rewrite, which the build never calls.
+      - name: Build
+        run: yarn build
